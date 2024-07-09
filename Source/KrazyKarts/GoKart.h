@@ -27,7 +27,19 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
+	// Mass of the car (kg)
+	UPROPERTY(EditAnywhere)
+	float Mass = 1000;
+
+	// The force applied to the car when the throttle is fully down (N)
+	UPROPERTY(EditAnywhere)
+	float MaxDrivingForce = 10000;
+
+	float Throttle;
+
 	FVector Velocity;
 
 	void MoveForward(float Value);
+
+	void UpdateLocationFromVelocity(float DeltaTime);
 };

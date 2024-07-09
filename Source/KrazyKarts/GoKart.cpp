@@ -24,9 +24,24 @@ void AGoKart::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	FVector Force = GetActorForwardVector() * MaxDrivingForce * Throttle;
+	FVector Acceleration = Force / Mass;
+
+	Velocity += Acceleration * DeltaTime;
+
+	UpdateLocationFromVelocity(DeltaTime);
+}
+
+void AGoKart::UpdateLocationFromVelocity(float DeltaTime) 
+{
 	FVector Translation = Velocity * DeltaTime * 100;
 
-	AddActorWorldOffset(Translation);
+	FHitResult Hit;
+	AddActorWorldOffset(Translation, true, &Hit);
+	if (Hit.IsValidBlockingHit())
+	{
+		Velocity = FVector::ZeroVector;
+	}
 }
 
 // Called to bind functionality to input
@@ -40,5 +55,5 @@ void AGoKart::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AGoKart::MoveForward(float Value) 
 {
-	Velocity = GetActorForwardVector() * 20 * Value;
+	Throttle = Value;
 }
