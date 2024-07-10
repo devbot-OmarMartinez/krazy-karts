@@ -59,6 +59,8 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
+	void SimulateMove(FGoKartMove Move);
+
 	// Mass of the car (kg)
 	UPROPERTY(EditAnywhere)
 	float Mass = 1000;
@@ -79,10 +81,8 @@ private:
 	UPROPERTY(EditAnywhere)
 	float MinTurningRadius = 10;
 
-	UPROPERTY(Replicated)
 	float Throttle;
 
-	UPROPERTY(Replicated)
 	float SteeringThrow;
 
 	FVector Velocity;
@@ -101,9 +101,9 @@ private:
 
 	void UpdateLocationFromVelocity(float DeltaTime);
 
-	void ApplyRotation(float DeltaTime);
+	void ApplyRotation(float DeltaTime, float ParamSteeringThrow);
 
-	FVector GetResistance();
+	FVector GetAirResistance();
 
 	FVector GetRollingResistance();
 };
