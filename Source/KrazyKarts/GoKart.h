@@ -87,6 +87,8 @@ private:
 
 	FVector Velocity;
 
+	TArray<FGoKartMove> UnacknowledgedMoves;
+
 	void MoveForward(float Value);
 	void MoveRight(float Value);
 
@@ -95,6 +97,10 @@ private:
 
 	UPROPERTY(ReplicatedUsing = OnRep_ServerState)
 	FGoKartState ServerState;
+
+	FGoKartMove CreateMove(float DeltaTime);
+
+	void ClearAcknowledgeMoves(FGoKartMove LastMove);
 
 	UFUNCTION()
 	void OnRep_ServerState();
@@ -106,4 +112,6 @@ private:
 	FVector GetAirResistance();
 
 	FVector GetRollingResistance();
+
+	float GetServerWorldTimeSeconds() const;
 };
