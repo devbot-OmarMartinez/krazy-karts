@@ -39,6 +39,14 @@ private:
 	UPROPERTY(EditAnywhere)
 	float MaxDegreesPerSecond = 90;
 
+	// Higher means more drag.
+	UPROPERTY(EditAnywhere)
+	float DragCoefficient = 16;
+
+	// Higher means more rolling resistance.
+	UPROPERTY(EditAnywhere)
+	float RollingResistanceCoefficient = 0.015;
+
 	float Throttle;
 
 	float SteeringThrow;
@@ -52,4 +60,8 @@ private:
 	void UpdateLocationFromVelocity(float DeltaTime);
 
 	void ApplyRotation(float DeltaTime);
+
+	FVector GetResistance();
+
+	FVector GetRollingResistance();
 };
