@@ -53,10 +53,13 @@ private:
 	UFUNCTION()
 	void OnRep_ReplicatedTranform();
 
+	UPROPERTY(Replicated)
 	float Throttle;
 
+	UPROPERTY(Replicated)
 	float SteeringThrow;
 
+	UPROPERTY(Replicated)
 	FVector Velocity;
 
 	void MoveForward(float Value);
