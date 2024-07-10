@@ -4,6 +4,7 @@
 #include "GoKart.h"
 #include "Components/InputComponent.h"
 #include "Engine/World.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values
 AGoKart::AGoKart()
@@ -11,6 +12,32 @@ AGoKart::AGoKart()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+}
+
+FString GetEnumText(ENetRole Role) 
+{
+	switch (Role)
+	{
+	case ROLE_None:
+		return "None";
+		break;
+	case ROLE_SimulatedProxy:
+		return "SimulatedProxy";
+		break;
+	case ROLE_AutonomousProxy:
+		return "AutonomousProxy";
+		break;
+	case ROLE_Authority:
+		return "Authority";
+		break;
+	case ROLE_MAX:
+		break;
+	default:
+		return "ERROR";
+		break;
+	}
+
+	return "ERROR";
 }
 
 // Called when the game starts or when spawned
@@ -36,6 +63,8 @@ void AGoKart::Tick(float DeltaTime)
 
 	ApplyRotation(DeltaTime);
 	UpdateLocationFromVelocity(DeltaTime);
+
+	DrawDebugString(GetWorld(), FVector(0, 0, 100), GetEnumText(GetLocalRole()), this, FColor::White, DeltaTime);
 }
 
 FVector AGoKart::GetResistance()
@@ -78,8 +107,8 @@ void AGoKart::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAxis("MoveForward", this, &AGoKart::Server_MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &AGoKart::Server_MoveRight);
+	PlayerInputComponent->BindAxis("MoveForward", this, &AGoKart::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &AGoKart::MoveRight);
 
 }
 
@@ -101,4 +130,17 @@ void AGoKart::Server_MoveRight_Implementation(float Value)
 bool AGoKart::Server_MoveRight_Validate(float Value)
 {
 	return FMath::Abs(Value) <= 1;
+}
+
+void AGoKart::MoveForward(float Value)
+{
+	Throttle = Value;
+	Server_MoveForward(Value);
+}
+
+
+void AGoKart::MoveRight(float Value)
+{
+	SteeringThrow = Value;
+	Server_MoveRight(Value);
 }
