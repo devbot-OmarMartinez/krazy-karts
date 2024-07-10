@@ -47,6 +47,12 @@ private:
 	UPROPERTY(EditAnywhere)
 	float MinTurningRadius = 10;
 
+	UPROPERTY(ReplicatedUsing = OnRep_ReplicatedTranform)
+	FTransform ReplicatedTranform;
+
+	UFUNCTION()
+	void OnRep_ReplicatedTranform();
+
 	float Throttle;
 
 	float SteeringThrow;

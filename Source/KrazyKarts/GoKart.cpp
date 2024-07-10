@@ -5,13 +5,25 @@
 #include "Components/InputComponent.h"
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 AGoKart::AGoKart()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	bReplicates = true;
+}
 
+void AGoKart::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);	
+	DOREPLIFETIME(AGoKart, ReplicatedTranform);
+}
+
+void AGoKart::OnRep_ReplicatedTranform()
+{
+	SetActorTransform(ReplicatedTranform);
 }
 
 FString GetEnumText(ENetRole Role) 
@@ -44,7 +56,11 @@ FString GetEnumText(ENetRole Role)
 void AGoKart::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	if (HasAuthority())
+	{
+		NetUpdateFrequency = 1;
+	}
 }
 
 // Called every frame
@@ -63,6 +79,11 @@ void AGoKart::Tick(float DeltaTime)
 
 	ApplyRotation(DeltaTime);
 	UpdateLocationFromVelocity(DeltaTime);
+
+	if (HasAuthority())
+	{
+		ReplicatedTranform = GetActorTransform();
+	}
 
 	DrawDebugString(GetWorld(), FVector(0, 0, 100), GetEnumText(GetLocalRole()), this, FColor::White, DeltaTime);
 }
