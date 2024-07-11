@@ -59,7 +59,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
-	void SimulateMove(FGoKartMove Move);
+	void SimulateMove(const FGoKartMove& Move);
 
 	// Mass of the car (kg)
 	UPROPERTY(EditAnywhere)
@@ -112,6 +112,4 @@ private:
 	FVector GetAirResistance();
 
 	FVector GetRollingResistance();
-
-	float GetServerWorldTimeSeconds() const;
 };
