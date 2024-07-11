@@ -26,7 +26,11 @@ void UGoKartMovementComponentA::TickComponent(float DeltaTime, ELevelTick TickTy
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	if (GetOwnerRole() == ROLE_AutonomousProxy || IsLocallyControlled())
+	{
+		LastMove = CreateMove(DeltaTime);
+		SimulateMove(LastMove);
+	}
 }
 
 void UGoKartMovementComponentA::SimulateMove(const FGoKartMove& Move)
@@ -91,3 +95,14 @@ void UGoKartMovementComponentA::UpdateLocationFromVelocity(float DeltaTime)
 	}
 }
 
+bool UGoKartMovementComponentA::IsLocallyControlled()
+{
+	auto* Owner = Cast<APawn>(GetOwner());
+
+	if (!Owner)
+	{
+		return false;
+	}
+
+	return Owner->IsLocallyControlled();
+}
