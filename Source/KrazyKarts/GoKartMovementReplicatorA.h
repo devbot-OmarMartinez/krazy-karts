@@ -85,6 +85,11 @@ private:
 
 	UPROPERTY()
 	UGoKartMovementComponentA* MovementComponent;
+	
+	UPROPERTY()
+	USceneComponent* MeshOffsetRoot;
+	UFUNCTION(BlueprintCallable)
+	void SetMeshOffsetRoot(USceneComponent* Root) { MeshOffsetRoot = Root; }
 
 	UFUNCTION()
 	bool IsLocallyControlled();
