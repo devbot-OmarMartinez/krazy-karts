@@ -56,5 +56,6 @@ private:
 	UPROPERTY()
 	UGoKartMovementComponentA* MovementComponent;
 
+	UFUNCTION()
 	bool IsLocallyControlled();
 };
